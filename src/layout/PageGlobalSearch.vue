@@ -9,6 +9,7 @@ import PanHubResultGroup from './PanHubResultGroup.vue'
 import PanHubHotSearches from './PanHubHotSearches.vue'
 import PanHubDoubanHot from './PanHubDoubanHot.vue'
 import PanHubSearchBox from './PanHubSearchBox.vue'
+import PanHubSettingsDrawer, { type PanHubSettings } from './PanHubSettingsDrawer.vue'
 import AISearchAgent from './AISearchAgent.vue'
 
 const appStore = useAppStore()
@@ -133,9 +134,16 @@ const phTotal = ref(0); const phMerged = ref<PanHubMergedLinks>({})
 const phError = ref(''); const phFilterPlatform = ref('all')
 const phSortType = ref<'default'|'date-desc'|'date-asc'|'name-asc'|'name-desc'>('default')
 const phElapsedMs = ref(0); let phController: AbortController|null = null
-const phConcurrency = ref(4)
-const phTimeout = ref(5000)
-const showPhSettings = ref(false)
+const SETTINGS_KEY = 'panhub.user_settings'
+function loadPhSettings(): PanHubSettings {
+  try { const raw = localStorage.getItem(SETTINGS_KEY); if (raw) return JSON.parse(raw) } catch {}
+  return { enabledPlugins: [], enabledChannels: [], concurrency: 4, pluginTimeoutMs: 5000 }
+}
+function savePhSettings(s: PanHubSettings) { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)) }
+const phSettings = ref<PanHubSettings>(loadPhSettings())
+const phSources = ref<{ plugins: string[]; channels: string[] }>({ plugins: [], channels: [] })
+let phAllPlugins: string[] = []
+let phAllChannels: string[] = []
 
 const PH_PLATFORM_INFO: Record<string,{name:string;color:string}> = {
   aliyun:{name:'阿里云盘',color:'#7c3aed'},quark:{name:'夸克网盘',color:'#6366f1'},
@@ -162,6 +170,7 @@ async function phDoSearch(){
   try{
     panHubFetch(`${PANHUB_API_BASE}/hot-searches`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({term:kw})}).catch(()=>{})
     const sources=await discoverPanHubSources(PANHUB_API_BASE,panHubFetch,controller.signal)
+        if(!phAllPlugins.length){phAllPlugins=sources.plugins;phAllChannels=sources.channels;phSources.value={plugins:sources.plugins,channels:sources.channels}}
     const result=await searchPanHubSources({
       apiBase:PANHUB_API_BASE,
       keyword:kw,
@@ -575,11 +584,7 @@ onUnmounted(() => {
       </template>
       <template v-else-if="isPanHubMode()">
         <div class="ph-settings-bar">
-      <button class="ph-settings-btn" type="button" title="搜索设置" @click="showPhSettings = !showPhSettings">⚙ 并发:{{ phConcurrency }} · 超时:{{ phTimeout }}ms</button>
-      <div v-if="showPhSettings" class="ph-settings-drop">
-        <div class="ph-settings-row"><span>并发数</span><input v-model.number="phConcurrency" type="number" min="1" max="10" class="ph-settings-input" /></div>
-        <div class="ph-settings-row"><span>超时(ms)</span><input v-model.number="phTimeout" type="number" min="1000" max="30000" step="1000" class="ph-settings-input" /></div>
-      </div>
+      <button class="ph-settings-btn" type="button" title="搜索设置" @click="showPhSettings = true">⚙ 并发:{{ phSettings.concurrency }} · 超时:{{ phSettings.pluginTimeoutMs }}ms</button>
     </div>
     <div v-if="!phSearched" class="ph-hero-row">
           <header class="ph-hero"><div class="ph-hero-badge">PanHub 搜索聚合引擎</div><h1 class="ph-hero-title"><span class="ph-hero-title-line">一键检索</span><span class="ph-hero-title-line ph-hero-title-accent">全网网盘资源</span></h1><p class="ph-hero-desc">聚合阿里云盘、夸克、百度网盘、115、迅雷等平台 · 快速、直达、少打扰</p><ul class="ph-hero-features"><li class="ph-hero-feature">实时聚合</li><li class="ph-hero-feature">多平台覆盖</li><li class="ph-hero-feature">结果去重</li></ul></header>
@@ -595,7 +600,8 @@ onUnmounted(() => {
         <div v-if="phLoading" class="ph-status-msg"><span class="gs-spinner" /> 正在搜索全网资源...</div>
         <section v-if="phHasResults" class="ph-results-section"><div class="ph-results-grid"><PanHubResultGroup :merged="phMerged" :platform-info="PH_PLATFORM_INFO" :filter-platform="phFilterPlatform" :sort-type="phSortType" @copy="phCopy" /></div></section>
         <section v-else-if="phSearched&&!phLoading&&!phHasResults" class="ph-empty-section"><div class="ph-empty-card"><div class="ph-empty-icon">🔍</div><h3>未找到相关资源</h3><p>试试其他关键词，或检查搜索源是否可用</p></div></section>
-        <section v-if="!phSearched" class="ph-douban-section"><PanHubDoubanHot :api-base="PANHUB_API_BASE" @select="phHotSelect" /></section>
+        <PanHubSettingsDrawer v-model="phSettings" :open="showPhSettings" :all-plugins="phAllPlugins" :all-channels="phAllChannels" @update:open="showPhSettings = $event" @save="savePhSettings(phSettings)" />
+      <section v-if="!phSearched" class="ph-douban-section"><PanHubDoubanHot :api-base="PANHUB_API_BASE" @select="phHotSelect" /></section>
       </template>
       <template v-else>
         <AISearchAgent :ai-enabled="true" :keyword="aiKeyword" :trigger="aiTrigger" :ph-search="phDoSearch" />
@@ -1198,13 +1204,7 @@ onUnmounted(() => {
 .ph-filter-pill.active{background:rgb(var(--primary-6));color:#fff;border-color:transparent}
 .ph-sort-select{padding:8px 14px;border:1px solid var(--color-border-2);background:var(--color-fill-1);border-radius:8px;font-size:13px;font-weight:500;color:var(--color-text-2);cursor:pointer;outline:none;min-width:140px}
 .ph-sort-select:focus{border-color:rgb(var(--primary-6));box-shadow:0 0 0 3px rgba(var(--primary-6),.12)}
-.ph-stats-settings{position:relative}
-.ph-settings-btn{padding:6px 8px;font-size:16px;color:var(--color-text-3);background:var(--color-fill-1);border:1px solid var(--color-border-2);border-radius:8px;cursor:pointer;line-height:1}
-.ph-settings-btn:hover{color:var(--color-text-1);background:var(--color-fill-2)}
-.ph-settings-drop{position:absolute;right:0;top:38px;z-index:100;padding:12px 14px;background:var(--color-bg-2);border:1px solid var(--color-border-2);border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.12);min-width:180px;display:flex;flex-direction:column;gap:10px}
-.ph-settings-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;color:var(--color-text-2)}
-.ph-settings-input{width:80px;padding:4px 8px;font-size:13px;color:var(--color-text-1);background:var(--color-fill-1);border:1px solid var(--color-border-2);border-radius:6px;outline:none;text-align:center}
-.ph-settings-input:focus{border-color:rgb(var(--primary-6))}
+/* settings now use PanHubSettingsDrawer */
 .ph-status-msg{display:flex;align-items:center;justify-content:center;gap:10px;padding:60px 48px;font-size:14px;color:var(--color-text-3)}
 .ph-error{display:flex;align-items:center;gap:8px;margin:12px 48px 0;padding:12px 16px;background:rgba(var(--danger-6),.1);border:1px solid rgba(var(--danger-6),.3);border-radius:8px;color:rgb(var(--danger-6));font-weight:500;font-size:13px}
 .ph-error-icon{font-size:16px}
