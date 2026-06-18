@@ -139,6 +139,7 @@ export function useAISearchChat(phSearchFn: (kw: string) => Promise<any>) {
 - importShare: 导入阿里云盘/夸克分享链接，转存到用户网盘
 - downloadFiles: 添加文件下载任务
 - moveFiles: 移动文件到指定目录（需用户确认）
+- getTMDBMovies: 获取 TMDB 最新电影（热映/流行/高分/即将上映）
 - getDoubanMovies: 获取豆瓣电影排行榜（Top250/新片/口碑/北美票房）
 - deleteFiles: 删除文件移入回收站（需用户确认）
 
@@ -151,7 +152,7 @@ export function useAISearchChat(phSearchFn: (kw: string) => Promise<any>) {
    - listDrives 会在界面弹出网盘选择器，让用户勾选并点确定
    - 用户选择后你会收到类似"用户选择了: 阿里云盘(zxm)、百度网盘。platforms: aliyun,baidu"的消息，提取 platforms 列表传给工具
    - 然后你再执行对应操作
-   - 用户想看热门电影/新片/排行榜 → 直接调用 getDoubanMovies，无需 listDrives
+   - 用户想看热门电影/新片/排行榜 → 调用 getTMDBMovies（国外）或 getDoubanMovies（国内），无需 listDrives
    - 导入分享：必须问用户保存到阿里云盘还是夸克
 4. 工具返回结果后，简要总结即可
 5. moveFiles 和 deleteFiles 必须先展示确认信息
@@ -479,6 +480,44 @@ export function useAISearchChat(phSearchFn: (kw: string) => Promise<any>) {
               appendPart(aiMsgId, { type: 'tool-moveFiles', state: 'confirm', input: { files, targetDir } } as MessagePart)
               scrollBottom()
               return { pending: true }
+            },
+          },
+
+          getTMDBMovies: {
+            description: '从 TMDB 获取电影数据（热映、流行、高分、即将上映），获取最新电影信息',
+            inputSchema: z.object({
+              category: z.enum(['trending','popular','top_rated','now_playing']).optional().describe('类别：trending=热映, popular=流行, top_rated=高分, now_playing=即将上映'),
+              page: z.number().optional().describe('页码，默认1'),
+            }),
+            execute: async (args: any) => {
+              const category = args.category || 'trending'
+              const page = args.page || 1
+              const label = { trending: 'TMDB 热映', popular: 'TMDB 流行', top_rated: 'TMDB 高分', now_playing: 'TMDB 即将上映' }[category] || 'TMDB 电影'
+              appendPart(aiMsgId, { type: 'tool-getMovies', state: 'loading', category: label } as MessagePart)
+              scrollBottom()
+              try {
+                const API_KEY = ''
+                const PROXY = 'https://tmdb-673444103572.asia-east2.run.app'
+                const endpoint = category === 'trending' ? '/trending/movie/week' : `/movie/${category}`
+                const resp = await fetch(`${PROXY}${endpoint}?api_key=${API_KEY}&language=zh-CN&page=${page}`)
+                const data = await resp.json()
+                if (data?.results) {
+                  const movies = data.results.slice(0, 25).map((m: any) => ({
+                    id: String(m.id || ''),
+                    title: m.title || '',
+                    cover: m.poster_path ? `https://image.tmdb.org/t/p/w342${m.poster_path}` : '',
+                    desc: `评分: ${m.vote_average?.toFixed(1) || '?'} · ${m.release_date?.slice(0,4) || ''}`,
+                    url: `https://www.themoviedb.org/movie/${m.id}`,
+                  }))
+                  updateToolPart(aiMsgId, 'tool-getMovies', {}, (p: any) => { p.state = 'done'; p.category = `${label} · ${movies.length}部`; p.movies = movies })
+                } else {
+                  updateToolPart(aiMsgId, 'tool-getMovies', {}, (p: any) => { p.state = 'error'; p.error = data?.status_message || data?.message || '获取失败' })
+                }
+              } catch (e: any) {
+                updateToolPart(aiMsgId, 'tool-getMovies', {}, (p: any) => { p.state = 'error'; p.error = e?.message || '请求失败' })
+              }
+              scrollBottom()
+              return {}
             },
           },
 

@@ -87,6 +87,7 @@ watch(() => props.trigger, () => {
 
 const DEFAULT_FOLLOWUPS = [
   '豆瓣电影排行榜',
+  'TMDB 最近热映',
   '帮我找科幻电影',
   '最近有什么好电影',
   '整理文件',
