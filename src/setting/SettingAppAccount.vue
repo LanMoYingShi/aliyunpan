@@ -41,12 +41,11 @@ async function handleOAuth(provider: 'github' | 'google') {
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: CALLBACK_URL, skipBrowserRedirect: false },
+      options: { redirectTo: CALLBACK_URL, skipBrowserRedirect: true },
     })
     if (error) message.error(error.message)
     else if (data.url) {
-      if (window.WebOpenWindow) window.WebOpenWindow({ url: data.url, title: `${provider} 登录` })
-      else window.open(data.url, '_blank')
+      window.open(data.url, '_blank')
     }
   } finally { loading.value = false }
 }
