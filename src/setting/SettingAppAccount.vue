@@ -4,7 +4,7 @@ import { Github, Chrome, Mail, Loader2, LogOut } from 'lucide-vue-next'
 import { createClient } from '@supabase/supabase-js'
 import Config from '../config'
 import message from '../utils/message'
-import { copyToClipboard } from '../utils/electronhelper'
+import { openExternal } from '../utils/electronhelper'
 
 const loading = ref(false)
 const emailInput = ref('')
@@ -45,7 +45,7 @@ async function handleOAuth(provider: 'github' | 'google') {
     })
     if (error) message.error(error.message)
     else if (data.url) {
-      window.open(data.url, '_blank')
+      openExternal(data.url)
     }
   } finally { loading.value = false }
 }
@@ -89,7 +89,7 @@ function setupCallbackListener() {
   onUnmounted(() => window.Electron.ipcRenderer?.removeListener('auth-callback', handler))
 }
 
-onMounted(() => { setupCallbackListener(); copyToClipboard('') })
+onMounted(() => { setupCallbackListener() })
 </script>
 
 <template>

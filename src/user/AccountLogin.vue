@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { X, Loader2, Github, Chrome, Mail } from 'lucide-vue-next'
 import { createClient } from '@supabase/supabase-js'
+import { openExternal } from '../utils/electronhelper'
 import Config from '../config'
 import message from '../utils/message'
 
@@ -36,7 +37,7 @@ async function handleOAuth(provider: 'github' | 'google') {
     })
     if (error) { message.error(error.message) }
     else if (data.url) {
-      window.open(data.url, '_blank')
+      openExternal(data.url)
     }
   } catch (e: any) { message.error(e?.message || 'OAuth 失败') }
   finally { loading.value = false }
