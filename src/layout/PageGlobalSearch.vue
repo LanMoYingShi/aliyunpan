@@ -133,6 +133,9 @@ const phTotal = ref(0); const phMerged = ref<PanHubMergedLinks>({})
 const phError = ref(''); const phFilterPlatform = ref('all')
 const phSortType = ref<'default'|'date-desc'|'date-asc'|'name-asc'|'name-desc'>('default')
 const phElapsedMs = ref(0); let phController: AbortController|null = null
+const phConcurrency = ref(4)
+const phTimeout = ref(5000)
+const showPhSettings = ref(false)
 
 const PH_PLATFORM_INFO: Record<string,{name:string;color:string}> = {
   aliyun:{name:'阿里云盘',color:'#7c3aed'},quark:{name:'夸克网盘',color:'#6366f1'},
@@ -389,6 +392,7 @@ onUnmounted(() => {
         :searched="searchMode === 'ai' ? false : (searchMode === 'local' ? (searching === false && hasInput) : phSearched)"
         :placeholder="searchMode === 'ai' ? '描述你想找什么，AI 帮你搜索...' : (searchMode === 'panhub' ? '搜索全网公开网盘资源...' : '搜索所有网盘和媒体服务器...')"
         @search="onSearchBoxSubmit()"
+        @pause="phController?.abort(); phLoading = false"
         @reset="searchMode === 'local' ? (keyword = '') : phReset()"
       />
 
@@ -579,6 +583,13 @@ onUnmounted(() => {
           <div class="ph-stats-main"><span class="ph-stat-item"><span class="ph-stat-label">结果</span><span class="ph-stat-value">{{ phTotal }}</span></span><span class="ph-stat-item"><span class="ph-stat-label">用时</span><span class="ph-stat-value">{{ phFmt(phElapsedMs) }}</span></span></div>
           <div v-if="phTotal>0" class="ph-stats-filters"><button :class="['ph-filter-pill',{active:phFilterPlatform==='all'}]" type="button" @click="phFilterPlatform='all'">全部 ({{phTotal}})</button><button v-for="p in phPlatforms" :key="p.key" :class="['ph-filter-pill',{active:phFilterPlatform===p.key}]" type="button" @click="phFilterPlatform=phFilterPlatform===p.key?'all':p.key">{{p.name}}({{p.count}})</button></div>
           <div v-if="phTotal>0" class="ph-stats-sort"><select v-model="phSortType" class="ph-sort-select"><option value="default">默认排序</option><option value="date-desc">最新发布</option><option value="date-asc">最早发布</option><option value="name-asc">名称A→Z</option><option value="name-desc">名称Z→A</option></select></div>
+          <div class="ph-stats-settings">
+            <button class="ph-settings-btn" type="button" title="搜索设置" @click="showPhSettings = !showPhSettings">⚙</button>
+            <div v-if="showPhSettings" class="ph-settings-drop">
+              <div class="ph-settings-row"><span>并发</span><input v-model.number="phConcurrency" type="number" min="1" max="10" class="ph-settings-input" /></div>
+              <div class="ph-settings-row"><span>超时(ms)</span><input v-model.number="phTimeout" type="number" min="1000" max="30000" step="1000" class="ph-settings-input" /></div>
+            </div>
+          </div>
         </div>
         <div v-if="phLoading" class="ph-status-msg"><span class="gs-spinner" /> 正在搜索全网资源...</div>
         <section v-if="phHasResults" class="ph-results-section"><div class="ph-results-grid"><PanHubResultGroup :merged="phMerged" :platform-info="PH_PLATFORM_INFO" :filter-platform="phFilterPlatform" :sort-type="phSortType" @copy="phCopy" /></div></section>
@@ -1181,6 +1192,13 @@ onUnmounted(() => {
 .ph-filter-pill.active{background:rgb(var(--primary-6));color:#fff;border-color:transparent}
 .ph-sort-select{padding:8px 14px;border:1px solid var(--color-border-2);background:var(--color-fill-1);border-radius:8px;font-size:13px;font-weight:500;color:var(--color-text-2);cursor:pointer;outline:none;min-width:140px}
 .ph-sort-select:focus{border-color:rgb(var(--primary-6));box-shadow:0 0 0 3px rgba(var(--primary-6),.12)}
+.ph-stats-settings{position:relative}
+.ph-settings-btn{padding:6px 8px;font-size:16px;color:var(--color-text-3);background:var(--color-fill-1);border:1px solid var(--color-border-2);border-radius:8px;cursor:pointer;line-height:1}
+.ph-settings-btn:hover{color:var(--color-text-1);background:var(--color-fill-2)}
+.ph-settings-drop{position:absolute;right:0;top:38px;z-index:100;padding:12px 14px;background:var(--color-bg-2);border:1px solid var(--color-border-2);border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.12);min-width:180px;display:flex;flex-direction:column;gap:10px}
+.ph-settings-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;color:var(--color-text-2)}
+.ph-settings-input{width:80px;padding:4px 8px;font-size:13px;color:var(--color-text-1);background:var(--color-fill-1);border:1px solid var(--color-border-2);border-radius:6px;outline:none;text-align:center}
+.ph-settings-input:focus{border-color:rgb(var(--primary-6))}
 .ph-status-msg{display:flex;align-items:center;justify-content:center;gap:10px;padding:60px 48px;font-size:14px;color:var(--color-text-3)}
 .ph-error{display:flex;align-items:center;gap:8px;margin:12px 48px 0;padding:12px 16px;background:rgba(var(--danger-6),.1);border:1px solid rgba(var(--danger-6),.3);border-radius:8px;color:rgb(var(--danger-6));font-weight:500;font-size:13px}
 .ph-error-icon{font-size:16px}
