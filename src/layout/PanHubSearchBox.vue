@@ -20,7 +20,6 @@ function handleReset() { emit('update:modelValue',''); emit('reset') }
     <div class="ph-box-actions">
       <button v-if="modelValue&&!loading&&!searched" class="ph-box-btn" type="button" title="清除" @click="emit('update:modelValue','');inputEl?.focus()"><X :size="16" :stroke-width="2" /></button>
       <button v-if="loading" class="ph-box-btn ph-box-btn-stop" type="button" title="停止搜索" @click="emit('pause')"><Pause :size="15" :stroke-width="2.5" /></button>
-      <span v-if="loading" class="ph-sp" />
       <button v-if="searched&&!loading" class="ph-box-btn ph-box-btn-reset" type="button" title="重置" @click="handleReset"><RotateCcw :size="16" :stroke-width="1.5" /></button>
       <button v-if="showAiToggle" class="ph-box-btn ph-box-btn-ai" :class="{ active: aiEnabled }" type="button" :title="aiEnabled ? '关闭 AI 搜索' : '开启 AI 搜索'" @click="emit('toggle-ai')"><Sparkles :size="15" :stroke-width="1.8" /></button>
       <button class="ph-box-btn ph-box-btn-search" type="button" title="搜索" :disabled="!modelValue.trim()" @click="handleSearch"><Search :size="16" :stroke-width="2" /></button>
@@ -46,6 +45,4 @@ function handleReset() { emit('update:modelValue',''); emit('reset') }
 .ph-box-btn-stop:hover{background:rgba(230,162,60,.22)}
 .ph-box-btn-ai{color:var(--color-text-3)}
 .ph-box-btn-ai:hover,.ph-box-btn-ai.active{color:rgb(var(--primary-6));background:rgba(var(--primary-6),.1)}
-.ph-sp{display:inline-block;width:14px;height:14px;border:2px solid var(--color-border-2);border-top-color:rgb(var(--primary-6));border-radius:50%;animation:ph-spin .6s linear infinite}
-@keyframes ph-spin{to{transform:rotate(360deg)}}
 </style>
