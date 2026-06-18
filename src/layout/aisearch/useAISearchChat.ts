@@ -66,6 +66,23 @@ export function useAISearchChat(phSearchFn: (kw: string) => Promise<any>) {
     })
   }
 
+  // scan all drives by searching common patterns, returns deduplicated files
+  async function scanAllDrives(): Promise<GlobalSearchResult[]> {
+    const patterns = ['.', 'pdf', 'mp4', 'mkv', 'txt', 'jpg', 'png', 'mp3', 'zip', 'doc', 'xls', 'ppt', 'epub', 'mobi', 'flac', 'rar', '7z']
+    const seen = new Set<string>()
+    const all: GlobalSearchResult[] = []
+    for (const p of patterns) {
+      try {
+        const results = await searchAllDrives(p)
+        for (const r of results) {
+          const key = `${r.drive_id}:${r.file_id}`
+          if (!seen.has(key)) { seen.add(key); all.push(r) }
+        }
+      } catch {}
+    }
+    return all
+  }
+
   async function getUserIdForPlatform(platform: 'aliyun' | 'quark'): Promise<{ userId: string; driveId: string } | null> {
     const users = await UserDAL.GetUserListFromDB()
     for (const u of users) {
@@ -343,7 +360,7 @@ export function useAISearchChat(phSearchFn: (kw: string) => Promise<any>) {
               appendPart(aiMsgId, { type: 'tool-findDuplicates', state: 'scanning' } as MessagePart)
               scrollBottom()
               try {
-                const allFiles = await searchAllDrives('')
+                const allFiles = await scanAllDrives()
                 const map = new Map<string, FileResult[]>()
                 for (const f of allFiles) {
                   if (f.isDir) continue
@@ -370,7 +387,7 @@ export function useAISearchChat(phSearchFn: (kw: string) => Promise<any>) {
               appendPart(aiMsgId, { type: 'tool-analyzeStorage', state: 'scanning' } as MessagePart)
               scrollBottom()
               try {
-                const allFiles = await searchAllDrives('')
+                const allFiles = await scanAllDrives()
                 const driveMap = new Map<string, { totalSize: number; count: number; files: FileResult[] }>()
                 for (const f of allFiles) {
                   const key = f.providerName
@@ -399,7 +416,7 @@ export function useAISearchChat(phSearchFn: (kw: string) => Promise<any>) {
               appendPart(aiMsgId, { type: 'tool-categorizeFiles', state: 'planning' } as MessagePart)
               scrollBottom()
               try {
-                const allFiles = await searchAllDrives('')
+                const allFiles = await scanAllDrives()
                 const catMap: Record<string, { exts: string[]; count: number; size: number }> = {
                   '视频': { exts: ['mp4','mkv','avi','mov','wmv','flv','webm'], count: 0, size: 0 },
                   '文档': { exts: ['pdf','doc','docx','txt','md','xls','xlsx','ppt','pptx'], count: 0, size: 0 },
