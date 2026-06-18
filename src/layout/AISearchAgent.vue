@@ -68,6 +68,7 @@ function handleRetryTool(_messageId: string, _toolType: string, input: any) {
 
 function handleDriveConfirm(selected: { userId: string; name: string; platform: string; driveId: string }[]) {
   const PLATFORM_LABELS: Record<string, string> = {
+    'aliyun-backup': '阿里云盘·备份盘', 'aliyun-resource': '阿里云盘·资源盘',
     aliyun: '阿里云盘', quark: '夸克网盘', baidu: '百度网盘', '115': '115网盘',
     '123': '123云盘', tianyi: '天翼云盘', xunlei: '迅雷云盘', pikpak: 'PikPak',
     dropbox: 'Dropbox', onedrive: 'OneDrive', box: 'Box',

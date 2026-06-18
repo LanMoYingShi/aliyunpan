@@ -88,7 +88,7 @@ export function useAISearchChat(phSearchFn: (kw: string) => Promise<any>) {
     for (const u of users) {
       if (!u?.user_id || !u?.access_token) continue
       if (platform === 'quark' && u.tokenfrom === 'quark') return { userId: u.user_id, driveId: 'quark' }
-      if (platform === 'aliyun' && u.tokenfrom === 'aliyun') return { userId: u.user_id, driveId: u.default_drive_id || '' }
+      if (platform === 'aliyun' && u.tokenfrom === 'aliyun') return { userId: u.user_id, driveId: u.resource_drive_id || u.default_drive_id || '' }
     }
     return null
   }
@@ -167,14 +167,18 @@ export function useAISearchChat(phSearchFn: (kw: string) => Promise<any>) {
             inputSchema: z.object({}),
             execute: async () => {
               const users = await UserDAL.GetUserListFromDB()
-              const drives = users
-                .filter(u => !!u?.user_id && !!u?.access_token)
-                .map(u => ({
-                  userId: u.user_id,
-                  name: u.nick_name || u.user_name || u.name || u.user_id,
-                  platform: u.tokenfrom || 'aliyun',
-                  driveId: u.default_drive_id || u.drive_id || '',
-                }))
+              const drives: { userId: string; name: string; platform: string; driveId: string }[] = []
+              for (const u of users) {
+                if (!u?.user_id || !u?.access_token) continue
+                const name = u.nick_name || u.user_name || u.name || u.user_id
+                const platform = u.tokenfrom || 'aliyun'
+                if (platform === 'aliyun') {
+                  if (u.backup_drive_id) drives.push({ userId: u.user_id, name: `${name}`, platform: 'aliyun-backup', driveId: u.backup_drive_id })
+                  if (u.resource_drive_id) drives.push({ userId: u.user_id, name: `${name}`, platform: 'aliyun-resource', driveId: u.resource_drive_id })
+                } else {
+                  drives.push({ userId: u.user_id, name, platform, driveId: u.default_drive_id || u.drive_id || '' })
+                }
+              }
               appendPart(aiMsgId, { type: 'tool-listDrives', state: 'select', drives } as MessagePart)
               scrollBottom()
               return { count: drives.length, drives }
