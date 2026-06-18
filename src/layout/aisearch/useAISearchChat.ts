@@ -134,9 +134,9 @@ export function useAISearchChat(phSearchFn: (kw: string) => Promise<any>) {
 - listDrives: 列出用户所有已登录的网盘
 - searchMyFiles: 搜索用户所有云盘中的文件
 - searchPanHub: 搜索全网公开网盘分享链接
-- findDuplicates: 扫描云盘查找重复文件
-- analyzeStorage: 分析存储空间，找大文件和旧文件
-- categorizeFiles: 按类型分类文件，提供整理方案
+- findDuplicates: 扫描云盘查找重复文件（需传 platforms 参数限定网盘）
+- analyzeStorage: 分析存储空间（需传 platforms 参数限定网盘）
+- categorizeFiles: 按类型分类文件（需传 platforms 参数限定网盘）
 - importShare: 导入阿里云盘/夸克分享链接，转存到用户网盘
 - downloadFiles: 添加文件下载任务
 - moveFiles: 移动文件到指定目录（需用户确认）
@@ -148,7 +148,7 @@ export function useAISearchChat(phSearchFn: (kw: string) => Promise<any>) {
 3. 多网盘场景必须先调用 listDrives：
    - 用户要求整理/分析/查重时，先调用 listDrives
    - listDrives 会在界面弹出网盘选择器，让用户勾选并点确定
-   - 用户选择后你会收到类似"用户选择了: 阿里云盘(zxm)、百度网盘"的消息
+   - 用户选择后你会收到类似"用户选择了: 阿里云盘(zxm)、百度网盘。platforms: aliyun,baidu"的消息，提取 platforms 列表传给工具
    - 然后你再执行对应操作
    - 导入分享：必须问用户保存到阿里云盘还是夸克
 4. 工具返回结果后，简要总结即可
@@ -361,13 +361,13 @@ export function useAISearchChat(phSearchFn: (kw: string) => Promise<any>) {
           },
 
           findDuplicates: {
-            description: '扫描所有云盘查找重复文件',
-            inputSchema: z.object({}),
-            execute: async () => {
+            description: '扫描云盘查找重复文件，platforms 参数指定要扫描的网盘',
+            inputSchema: z.object({ platforms: z.array(z.string()).optional().describe('网盘平台名列表，如 ["aliyun","baidu"]') }),
+            execute: async (args: any) => {
               appendPart(aiMsgId, { type: 'tool-findDuplicates', state: 'scanning' } as MessagePart)
               scrollBottom()
               try {
-                const allFiles = await scanAllDrives()
+                const allFiles = (await scanAllDrives()).filter(f => !args.platforms?.length || args.platforms.includes(f.provider))
                 const map = new Map<string, FileResult[]>()
                 for (const f of allFiles) {
                   if (f.isDir) continue
@@ -388,13 +388,13 @@ export function useAISearchChat(phSearchFn: (kw: string) => Promise<any>) {
           },
 
           analyzeStorage: {
-            description: '分析存储空间使用情况',
-            inputSchema: z.object({}),
-            execute: async () => {
+            description: '分析存储空间使用情况，platforms 参数指定要分析的网盘',
+            inputSchema: z.object({ platforms: z.array(z.string()).optional().describe('网盘平台名列表') }),
+            execute: async (args: any) => {
               appendPart(aiMsgId, { type: 'tool-analyzeStorage', state: 'scanning' } as MessagePart)
               scrollBottom()
               try {
-                const allFiles = await scanAllDrives()
+                const allFiles = (await scanAllDrives()).filter(f => !args.platforms?.length || args.platforms.includes(f.provider))
                 const driveMap = new Map<string, { totalSize: number; count: number; files: FileResult[] }>()
                 for (const f of allFiles) {
                   const key = f.providerName
@@ -417,13 +417,13 @@ export function useAISearchChat(phSearchFn: (kw: string) => Promise<any>) {
           },
 
           categorizeFiles: {
-            description: '分析文件类型分布并提供分类整理方案',
-            inputSchema: z.object({}),
-            execute: async () => {
+            description: '分析文件类型分布，platforms 参数指定要分类的网盘',
+            inputSchema: z.object({ platforms: z.array(z.string()).optional().describe('网盘平台名列表') }),
+            execute: async (args: any) => {
               appendPart(aiMsgId, { type: 'tool-categorizeFiles', state: 'planning' } as MessagePart)
               scrollBottom()
               try {
-                const allFiles = await scanAllDrives()
+                const allFiles = (await scanAllDrives()).filter(f => !args.platforms?.length || args.platforms.includes(f.provider))
                 const catMap: Record<string, { exts: string[]; count: number; size: number }> = {
                   '视频': { exts: ['mp4','mkv','avi','mov','wmv','flv','webm'], count: 0, size: 0 },
                   '文档': { exts: ['pdf','doc','docx','txt','md','xls','xlsx','ppt','pptx'], count: 0, size: 0 },

@@ -73,7 +73,8 @@ function handleDriveConfirm(selected: { userId: string; name: string; platform: 
     dropbox: 'Dropbox', onedrive: 'OneDrive', box: 'Box',
   }
   const desc = selected.map(d => `${PLATFORM_LABELS[d.platform] || d.platform}(${d.name})`).join('、')
-  handleSend('用户选择了: ' + desc)
+  const platforms = selected.map(d => d.platform)
+  handleSend(`用户选择了: ${desc}。platforms: ${platforms.join(',')}`)
 }
 
 function handleConfirmAction(msgId: string, partIndex: number) { confirmAction(msgId, partIndex) }
