@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, nextTick, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { Github, Chrome, Mail, Loader2, LogOut } from 'lucide-vue-next'
 import { createClient } from '@supabase/supabase-js'
 import Config from '../config'
@@ -15,6 +15,7 @@ const userEmail = ref(localStorage.getItem('app_user_email') || '')
 const isLoggedIn = ref(localStorage.getItem('app_user_authed') === '1')
 const isPro = ref(localStorage.getItem('app_user_pro') === '1')
 const upgrading = ref(false)
+const showUpgradeModal = ref(false)
 
 const CALLBACK_URL = 'boxplayer-auth://callback'
 const PAYMENT_CALLBACK = 'boxplayer-auth://payment-success'
@@ -147,7 +148,7 @@ onMounted(() => {
   setupPaymentCallback()
   if (localStorage.getItem('boxplayer_show_pricing') === '1') {
     localStorage.removeItem('boxplayer_show_pricing')
-    nextTick(() => document.getElementById('SettingAppAccount')?.scrollIntoView({ behavior: 'smooth' }))
+    if (!isPro.value) showUpgradeModal.value = true
   }
 })
 </script>
@@ -186,51 +187,50 @@ onMounted(() => {
       </div>
     </template>
 
-    <!-- Pricing comparison -->
-    <div v-if="!isPro" class="pricing">
-      <div class="pricing-cols">
-        <div class="pricing-col">
-          <div class="pricing-col-header">
-            <div class="pricing-col-name">开源版</div>
-            <div class="pricing-col-price"><b>免费</b></div>
-          </div>
-          <ul class="pricing-features">
-            <li>网盘文件管理（浏览/上传/下载）</li>
-            <li>视频 & 音乐播放</li>
-            <li>本地书籍阅读</li>
-            <li>多网盘同时连接</li>
-            <li>全网资源搜索（5次/天）</li>
-            <li>AI 智能搜索（5次/天）</li>
-            <li>社区支持</li>
-          </ul>
-          <button class="pricing-btn pricing-btn-oss" @click="openExternal('https://github.com/gaozhangmin/boxplayer')">立即使用</button>
-        </div>
+    <!-- Version badge + upgrade -->
+    <div class="sa-version">
+      <div class="sa-version-badge" :class="{ pro: isPro }">
+        <span v-if="isPro">专业版 PRO</span>
+        <span v-else>开源版</span>
+      </div>
+      <button v-if="!isPro" class="sa-version-upgrade" @click="showUpgradeModal = true">升级到专业版</button>
+    </div>
 
-        <div class="pricing-col pricing-col-pro">
-          <div class="pricing-col-badge">推荐</div>
-          <div class="pricing-col-header">
-            <div class="pricing-col-name">专业版</div>
-            <div class="pricing-col-price"><b>$10</b> / 月</div>
-          </div>
-          <ul class="pricing-features">
-            <li><strong>开源版全部功能</strong></li>
-            <li>AI 智能搜索（无限次）</li>
-            <li>AI 文件整理 & 查重</li>
-            <li>AI 阅读助手（PDF/EPUB）</li>
-            <li>语音朗读（5000字/天）</li>
-            <li>即时翻译（5000字/天）</li>
-            <li>全网资源一键保存</li>
-            <li>TMDB + 豆瓣电影发现</li>
-            <li>优先技术支持</li>
-          </ul>
-          <button v-if="isLoggedIn" class="pricing-btn pricing-btn-pro" :disabled="upgrading" @click="handleUpgrade">
-            <Loader2 v-if="upgrading" :size="14" class="spin" />
-            <span v-else>开始购买</span>
-          </button>
-          <button v-else class="pricing-btn pricing-btn-login" @click="message.info('请先使用上方 GitHub / Google / 邮箱登录后再购买')">
-            登录后购买
-          </button>
-        </div>
+    <!-- Upgrade modal -->
+    <div v-if="showUpgradeModal" class="upg-mask" @click.self="showUpgradeModal = false">
+      <div class="upg-modal">
+        <button class="upg-close" @click="showUpgradeModal = false"><X :size="18" /></button>
+        <h2 class="upg-title">版本对比</h2>
+
+        <table class="upg-table">
+          <thead>
+            <tr><th>功能</th><th>开源版</th><th class="upg-th-pro">专业版</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>网盘文件管理</td><td class="upg-yes">✓</td><td class="upg-yes">✓</td></tr>
+            <tr><td>视频 / 音乐播放</td><td class="upg-yes">✓</td><td class="upg-yes">✓</td></tr>
+            <tr><td>本地书籍阅读</td><td class="upg-yes">✓</td><td class="upg-yes">✓</td></tr>
+            <tr><td>多网盘同时连接</td><td class="upg-yes">✓</td><td class="upg-yes">✓</td></tr>
+            <tr><td>AI 智能搜索</td><td class="upg-limit">5次/天</td><td class="upg-yes">无限</td></tr>
+            <tr><td>全网资源搜索</td><td class="upg-limit">5次/天</td><td class="upg-yes">无限</td></tr>
+            <tr><td>AI 文件整理 & 查重</td><td class="upg-no">✗</td><td class="upg-yes">✓</td></tr>
+            <tr><td>AI 阅读助手</td><td class="upg-no">✗</td><td class="upg-yes">✓</td></tr>
+            <tr><td>语音朗读</td><td class="upg-no">✗</td><td class="upg-yes">✓</td></tr>
+            <tr><td>即时翻译</td><td class="upg-no">✗</td><td class="upg-yes">✓</td></tr>
+            <tr><td>全网资源一键保存</td><td class="upg-no">✗</td><td class="upg-yes">✓</td></tr>
+            <tr><td>TMDB + 豆瓣电影发现</td><td class="upg-no">✗</td><td class="upg-yes">✓</td></tr>
+            <tr><td>优先技术支持</td><td class="upg-no">✗</td><td class="upg-yes">✓</td></tr>
+          </tbody>
+        </table>
+
+        <div class="upg-price">$10 / 月</div>
+
+        <button v-if="isLoggedIn" class="upg-btn" :disabled="upgrading" @click="handleUpgrade">
+          <Loader2 v-if="upgrading" :size="14" class="spin" /> <span v-else>升级到专业版</span>
+        </button>
+        <button v-else class="upg-btn upg-btn-login" @click="message.info('请先使用上方 GitHub / Google / 邮箱登录后再购买'); showUpgradeModal = false">
+          登录后购买
+        </button>
       </div>
     </div>
   </div>
@@ -266,28 +266,32 @@ onMounted(() => {
 .sa-email-box button:hover:not(:disabled) { opacity: .9; }
 .sa-email-box button:disabled { opacity: .4; cursor: default; }
 
-/* Pricing */
-.pricing { margin-top: 6px; }
-.pricing-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.pricing-col { position: relative; padding: 16px 14px; background: var(--color-fill-1); border: 1px solid var(--color-border); border-radius: 12px; display: flex; flex-direction: column; }
-.pricing-col-pro { border-color: rgba(245,158,11,.4); background: linear-gradient(180deg, rgba(245,158,11,.06), var(--color-fill-1) 40%); }
-.pricing-col-badge { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); padding: 2px 12px; font-size: 10px; font-weight: 700; color: #fff; background: linear-gradient(135deg, #f59e0b, #eab308); border-radius: 99px; }
-.pricing-col-header { text-align: center; margin-bottom: 12px; }
-.pricing-col-name { font-size: 15px; font-weight: 700; color: var(--color-text-1); }
-.pricing-col-price { margin-top: 4px; font-size: 13px; color: var(--color-text-3); }
-.pricing-col-price b { font-size: 22px; color: var(--color-text-1); }
-.pricing-col-sub { font-size: 11px; color: var(--color-text-4); margin-top: 2px; }
-.pricing-features { list-style: none; margin: 0 0 14px; padding: 0; flex: 1; display: flex; flex-direction: column; gap: 5px; }
-.pricing-features li { font-size: 11px; color: var(--color-text-3); padding-left: 16px; position: relative; line-height: 1.5; }
-.pricing-features li::before { content: '✓'; position: absolute; left: 0; color: rgb(var(--success-6)); font-weight: 700; }
-.pricing-features li strong { color: var(--color-text-1); }
-.pricing-btn { width: 100%; padding: 9px 0; font-size: 13px; font-weight: 600; border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; font-family: inherit; transition: all .15s; margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 6px; }
-.pricing-btn-oss { color: var(--color-text-1); background: var(--color-bg-1); }
-.pricing-btn-oss:hover { background: var(--color-fill-2); }
-.pricing-btn-pro { color: #fff; background: linear-gradient(135deg, #f59e0b, #eab308); border: 0; }
-.pricing-btn-pro:hover:not(:disabled) { opacity: .9; }
-.pricing-btn-pro:disabled { opacity: .5; cursor: default; }
-.pricing-btn-login { color: #fff; background: var(--color-text-4); border: 0; }
+/* Version badge */
+.sa-version { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.sa-version-badge { padding: 3px 10px; font-size: 11px; font-weight: 700; color: var(--color-text-2); background: var(--color-fill-2); border: 1px solid var(--color-border); border-radius: 6px; }
+.sa-version-badge.pro { color: #b45309; background: rgba(245,158,11,.15); border-color: rgba(245,158,11,.3); }
+.sa-version-upgrade { margin-left: auto; padding: 6px 14px; font-size: 12px; font-weight: 600; color: #fff; background: linear-gradient(135deg,#f59e0b,#eab308); border:0; border-radius:7px; cursor:pointer; font-family:inherit; }
+.sa-version-upgrade:hover { opacity:.9; }
+
+/* Upgrade modal */
+.upg-mask{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:2000}
+.upg-modal{position:relative;width:620px;max-width:94vw;max-height:90vh;overflow-y:auto;background:var(--color-bg-2);border:1px solid var(--color-border);border-radius:16px;padding:28px 24px 20px;box-shadow:0 16px 48px rgba(0,0,0,.2)}
+.upg-close{position:absolute;top:12px;right:12px;display:flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;color:var(--color-text-4);background:transparent;border:0;border-radius:6px;cursor:pointer}
+.upg-close:hover{background:var(--color-fill-2);color:var(--color-text-1)}
+.upg-title{font-size:18px;font-weight:700;color:var(--color-text-1);text-align:center;margin:0 0 16px}
+.upg-table{width:100%;border-collapse:collapse;margin-bottom:16px}
+.upg-table th,.upg-table td{padding:8px 12px;font-size:12px;text-align:center;border-bottom:1px solid var(--color-border)}
+.upg-table th{color:var(--color-text-3);font-weight:600}
+.upg-table th:first-child,.upg-table td:first-child{text-align:left;color:var(--color-text-2)}
+.upg-th-pro{color:#b45309 !important}
+.upg-yes{color:rgb(var(--success-6));font-weight:700}
+.upg-no{color:var(--color-text-4)}
+.upg-limit{color:var(--color-text-3);font-size:11px}
+.upg-price{text-align:center;font-size:22px;font-weight:700;color:rgb(var(--primary-6));margin-bottom:12px}
+.upg-btn{display:block;width:100%;padding:10px 0;font-size:14px;font-weight:600;color:#fff;background:linear-gradient(135deg,#f59e0b,#eab308);border:0;border-radius:8px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
+.upg-btn:hover:not(:disabled){opacity:.9}
+.upg-btn:disabled{opacity:.5;cursor:default}
+.upg-btn-login{background:var(--color-text-4)}
 
 .spin { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
