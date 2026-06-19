@@ -24,8 +24,26 @@ try {
       body: JSON.stringify({ product_id: Config.CREEM_PRODUCT_ID }),
     })
     const data = await resp.json()
-    if (data.checkout_url) openExternal(data.checkout_url)
-    else message.error(data.message || '支付链接创建失败')
+    if (data.checkout_url) {
+      openExternal(data.checkout_url)
+      const chkId = data.id || ''
+      if (chkId) {
+        let attempts = 0
+        const apiBase2 = Config.CREEM_API_KEY.startsWith('creem_test_') ? 'https://test-api.creem.io' : 'https://api.creem.io'
+        const poll = setInterval(async () => {
+          if (++attempts > 20) { clearInterval(poll); return }
+          try {
+            const cr = await fetch(`${apiBase2}/v1/checkouts/${chkId}`, { headers: { 'x-api-key': Config.CREEM_API_KEY } })
+            const cd = await cr.json()
+            if (cd?.status === 'completed') {
+              clearInterval(poll)
+              localStorage.setItem('app_user_pro', '1')
+              window.location.reload()
+            }
+          } catch {}
+        }, 5000)
+      }
+    } else message.error(data.message || '支付链接创建失败')
   } catch { message.error('网络请求失败') }
   finally { upgrading.value = false }
 }

@@ -114,8 +114,26 @@ async function handleUpgrade() {
       body: JSON.stringify({ product_id: Config.CREEM_PRODUCT_ID, customer: { email: accountEmail.value || undefined }, metadata: { app_user: 'boxplayer' } }),
     })
     const data = await resp.json()
-    if (data.checkout_url) openExternal(data.checkout_url)
-    else message.error(data.message || '支付链接创建失败')
+    if (data.checkout_url) {
+      openExternal(data.checkout_url)
+      // Poll for payment completion every 5s, up to 20 times
+      const chkId = data.id || ''
+      if (chkId) {
+        let attempts = 0
+        const poll = setInterval(async () => {
+          if (++attempts > 20) { clearInterval(poll); return }
+          try {
+            const cr = await fetch(`${apiBase}/v1/checkouts/${chkId}`, { headers: { 'x-api-key': Config.CREEM_API_KEY } })
+            const cd = await cr.json()
+            if (cd?.status === 'completed') {
+              clearInterval(poll)
+              localStorage.setItem('app_user_pro', '1'); isPro.value = true
+              message.success('Pro 已激活！')
+            }
+          } catch {}
+        }, 5000)
+      }
+    } else message.error(data.message || '支付链接创建失败')
   } catch (e: any) { message.error(e?.message || '网络请求失败') }
   finally { upgrading.value = false }
 }
