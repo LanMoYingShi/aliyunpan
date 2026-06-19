@@ -201,11 +201,6 @@ const handleImportAsar = () => {
     <div class='settings-app-hero'>
       <div class='settings-app-badge'>Application</div>
       <div class='appver'>BoxPlayer {{ getAppVersion }} <span class="appver-badge" :class="{ pro: isPro }">{{ isPro ? 'PRO' : '开源版' }}</span></div>
-      <div class="appver-actions">
-        <span v-if="isLoggedIn" class="appver-email">{{ accountEmail }}</span>
-        <button v-if="isLoggedIn" class="appver-logout" @click="handleLogout"><LogOut :size="12" /> 退出</button>
-        <button v-if="!isPro" class="appver-upgrade" @click="showUpgradeModal = true">升级专业版</button>
-      </div>
       <div class='settings-app-subtitle'>统一配置桌面外观、启动行为、更新策略与系统集成体验</div>
     </div>
     <div class='settings-app-actions'>
@@ -225,21 +220,23 @@ const handleImportAsar = () => {
     </div>
     <div class='settingspace'></div>
     <div class='settinghead'>账号登录</div>
-    <div class='settingrow' style='flex-direction:column;align-items:stretch;gap:8px'>
+    <div class='settingrow' style='flex-direction:column;align-items:stretch;gap:10px'>
       <template v-if="isLoggedIn">
         <div style='display:flex;align-items:center;gap:10px'>
           <span style='font-size:14px;font-weight:500;color:var(--color-text-1)'>{{ accountEmail }}</span>
-          <button class="appver-logout" @click="handleLogout"><LogOut :size="12" /> 退出</button>
+          <button class="arco-btn arco-btn-outline arco-btn-size-small" @click="handleLogout"><LogOut :size="13" /> 退出</button>
         </div>
+        <button v-if="!isPro" class="arco-btn arco-btn-primary arco-btn-size-small" @click="showUpgradeModal = true" style="width:100%">升级到专业版 — $10/月</button>
+        <span v-else style="font-size:12px;color:rgb(var(--success-6));font-weight:600">✓ 已是专业版</span>
       </template>
       <template v-else>
-        <div style='display:flex;gap:8px'>
-          <button class="sa-provider sa-gh" :disabled="loading" @click="handleOAuth('github')" title="GitHub"><Github :size="18" /></button>
-          <button class="sa-provider sa-go" :disabled="loading" @click="handleOAuth('google')" title="Google"><Chrome :size="18" /></button>
-          <button class="sa-provider sa-em" :class="{ active: showEmail }" :disabled="loading" @click="showEmail = !showEmail" title="邮箱"><Mail :size="18" /></button>
+        <div style='display:flex;gap:10px'>
+          <button class="sa-provider sa-gh" :disabled="loading" @click="handleOAuth('github')" title="GitHub"><Github :size="20" /><span style="margin-left:6px">GitHub</span></button>
+          <button class="sa-provider sa-go" :disabled="loading" @click="handleOAuth('google')" title="Google"><Chrome :size="20" /><span style="margin-left:6px">Google</span></button>
+          <button class="sa-provider sa-em" :class="{ active: showEmail }" :disabled="loading" @click="showEmail = !showEmail" title="邮箱"><Mail :size="20" /><span style="margin-left:6px">邮箱</span></button>
         </div>
       </template>
-      <div v-if="showEmail && !isLoggedIn" style='display:flex;gap:6px'>
+      <div v-if="showEmail && !isLoggedIn" style='display:flex;gap:8px'>
         <template v-if="!codeSent">
           <input v-model="authEmail" type="email" placeholder="邮箱地址" class="sa-input" style='flex:1' />
           <button class="sa-send-btn" :disabled="loading || !authEmail.trim()" @click="handleEmailSend">
@@ -409,7 +406,7 @@ const handleImportAsar = () => {
 .appver-upgrade{padding:3px 12px;font-size:11px;font-weight:600;color:#fff;background:linear-gradient(135deg,#f59e0b,#eab308);border:0;border-radius:6px;cursor:pointer;font-family:inherit}
 .appver-upgrade:hover{opacity:.9}
 
-.sa-provider{display:flex;align-items:center;justify-content:center;width:36px;height:36px;padding:0;border:1px solid var(--color-border);border-radius:50%;cursor:pointer;font-family:inherit;transition:all .15s;flex-shrink:0}
+.sa-provider{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 16px;font-size:13px;font-weight:500;border:1px solid var(--color-border);border-radius:8px;cursor:pointer;font-family:inherit;transition:all .15s;flex:1}
 .sa-provider:hover:not(:disabled){transform:translateY(-1px)}
 .sa-provider:disabled{opacity:.4;cursor:default}
 .sa-gh{background:#24292e;color:#fff;border-color:#24292e}
