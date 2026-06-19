@@ -32,12 +32,12 @@ const showUpgradeModal = ref(false)
 
 onMounted(() => {
   setupAuthCallback()
+  if (isLoggedIn.value) syncProStatus()
   // Listen for payment success callback from website
   if (window.Electron?.ipcRenderer) {
     window.Electron.ipcRenderer.on('payment-callback', () => {
-      localStorage.setItem('app_user_pro', '1')
-      isPro.value = true
-      message.success('Pro 已激活！')
+      syncProStatus()
+      message.success('支付完成，正在同步 Pro 状态…')
     })
   }
   if (localStorage.getItem('boxplayer_show_pricing') === '1') {
@@ -72,6 +72,20 @@ function saveLogin(email: string) {
   localStorage.setItem('app_user_authed', '1')
   accountEmail.value = email
   isLoggedIn.value = true
+  syncProStatus()
+}
+
+async function syncProStatus() {
+  if (!isLoggedIn.value || !supabase) return
+  try {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    const { data: subs } = await supabase.from('user_subscriptions').select('status').eq('user_id', user.id).maybeSingle()
+    if (subs?.status === 'active' || subs?.status === 'trialing') {
+      localStorage.setItem('app_user_pro', '1')
+      isPro.value = true
+    }
+  } catch {}
 }
 
 async function handleOAuth(provider: 'github' | 'google') {
