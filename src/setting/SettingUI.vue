@@ -32,7 +32,14 @@ const showUpgradeModal = ref(false)
 
 onMounted(() => {
   setupAuthCallback()
-  setupPaymentCallback()
+  // Listen for payment success callback from website
+  if (window.Electron?.ipcRenderer) {
+    window.Electron.ipcRenderer.on('payment-callback', () => {
+      localStorage.setItem('app_user_pro', '1')
+      isPro.value = true
+      message.success('Pro 已激活！')
+    })
+  }
   if (localStorage.getItem('boxplayer_show_pricing') === '1') {
     localStorage.removeItem('boxplayer_show_pricing')
     if (!isPro.value) showUpgradeModal.value = true
