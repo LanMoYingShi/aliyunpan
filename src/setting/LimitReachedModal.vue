@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { X, Loader2, Sparkles } from 'lucide-vue-next'
 import Config from '../config'
 import { openExternal } from '../utils/electronhelper'
 import message from '../utils/message'
 
-defineProps<{ visible: boolean }>()
+const props = defineProps<{ visible: boolean }>()
 const emit = defineEmits<{ 'update:visible': [v: boolean] }>()
 
 const upgrading = ref(false)
 const isLoggedIn = ref(false)
-try { isLoggedIn.value = localStorage.getItem('app_user_authed') === '1' } catch {}
+watch(() => props.visible, (v) => {
+  if (v) try { isLoggedIn.value = localStorage.getItem('app_user_authed') === '1' } catch {}
+})
 
 async function handleUpgrade() {
   if (!Config.CREEM_API_KEY || !Config.CREEM_PRODUCT_ID) { message.error('Creem 未配置'); return }
