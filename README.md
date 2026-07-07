@@ -68,7 +68,7 @@
 </p>
 
 
-[![](https://img.shields.io/badge/-%E5%8A%9F%E8%83%BD-blue)](#功能-) [![](https://img.shields.io/badge/-%E2%9C%A8%20%E6%96%B0%E5%8A%9F%E8%83%BD-orange)](#新功能-) [![](https://img.shields.io/badge/-%E7%95%8C%E9%9D%A2-blue)](#界面-) [![](https://img.shields.io/badge/-%E5%AE%89%E8%A3%85-blue)](#安装-) [![](https://img.shields.io/badge/-CLI-blue)](#clouddrive-cli-) [![](https://img.shields.io/badge/-%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7-blue)](#小白羊公众号-) [![](https://img.shields.io/badge/-%E8%B5%9E%E5%8A%A9-blue)](#赞助-app-) [![](https://img.shields.io/badge/-%E4%BA%A4%E6%B5%81%E7%A4%BE%E5%8C%BA-blue)](#交流社区-) [![](https://img.shields.io/badge/-%E9%B8%A3%E8%B0%A2-blue)](#鸣谢-) [![](https://img.shields.io/badge/-%E5%A3%B0%E6%98%8E-blue)](#免责声明-)
+[![](https://img.shields.io/badge/-%E5%8A%9F%E8%83%BD-blue)](#功能-) [![](https://img.shields.io/badge/-Pro%20vs%20Open%20Source-blue)](#专业版-vs-开源版-) [![](https://img.shields.io/badge/-%E2%9C%A8%20%E6%96%B0%E5%8A%9F%E8%83%BD-orange)](#新功能-) [![](https://img.shields.io/badge/-%E7%95%8C%E9%9D%A2-blue)](#界面-) [![](https://img.shields.io/badge/-%E5%AE%89%E8%A3%85-blue)](#安装-) [![](https://img.shields.io/badge/-CLI-blue)](#clouddrive-cli-) [![](https://img.shields.io/badge/-%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7-blue)](#小白羊公众号-) [![](https://img.shields.io/badge/-%E8%B5%9E%E5%8A%A9-blue)](#赞助-app-) [![](https://img.shields.io/badge/-%E4%BA%A4%E6%B5%81%E7%A4%BE%E5%8C%BA-blue)](#交流社区-) [![](https://img.shields.io/badge/-%E9%B8%A3%E8%B0%A2-blue)](#鸣谢-) [![](https://img.shields.io/badge/-%E5%A3%B0%E6%98%8E-blue)](#免责声明-)
 
 
 # clouddrive-cli [![](https://img.shields.io/badge/-CLI-blue)](#clouddrive-cli-)
@@ -188,29 +188,67 @@ clouddrive-mcp
 12. **媒体库整理**：智能分类整理媒体文件，构建完整的个人媒体库 <br>
 13. **聚合搜索**：跨网盘与本地库的统一搜索，快速定位媒体内容 <br>
 
+## 🎵 音乐库与粒子播放器
+14. **网盘音乐库**：扫描所有已登录网盘和本地文件夹，自动识别歌曲、艺人、专辑、封面、时长和音频格式 <br>
+15. **沉浸式播放器**：实时频谱可视化、粒子动画背景、专辑封面舞台和沉浸式播放界面 <br>
+16. **AudioContext 音效引擎**：10 段 EQ、混响、声像、变调不变速，支持细调不同耳机和音箱的听感 <br>
+17. **逐字歌词**：支持逐字卡拉 OK 高亮、翻译 / 罗马音双行歌词和播放进度同步 <br>
+18. **桌面浮动歌词**：独立透明置顶歌词窗口，可拖动定位，适合边工作边听歌 <br>
+19. **多源元数据补全**：LRCLIB 查不到时自动从网易云、酷狗、QQ 音乐、酷我、咪咕补全歌词与封面（仅查询元数据）<br>
+20. **本地歌单与播客**：支持导入 M3U 歌单，将文件夹标记为播客，并与云盘音乐混合播放 <br>
+21. **主题系统**：12 色主题编辑器 + 15 套预设主题，播放界面、歌词和可视化效果统一联动 <br>
+
 ## 🎥 强大播放功能
-14. **在线高清播放**：支持网盘中各种格式的高清原画视频播放 <br>
-15. **多音轨切换**：播放器内置多音轨支持，自由选择语言音轨 <br>
-16. **外挂字幕**：支持加载外挂字幕文件，多字幕轨道切换 <br>
-17. **视频流与清晰度切换**：支持多视频流切换，可根据网络状况选择不同清晰度 <br>
-18. **播放速度调整**：支持自定义播放速度 <br>
-19. **播放列表管理**：支持创建和管理播放列表 <br>
-20. **第三方播放器**：支持 MPV、IINA 等专业播放器 <br>
+22. **在线高清播放**：支持网盘中各种格式的高清原画视频播放 <br>
+23. **多音轨切换**：播放器内置多音轨支持，自由选择语言音轨 <br>
+24. **外挂字幕**：支持加载外挂字幕文件，多字幕轨道切换 <br>
+25. **视频流与清晰度切换**：支持多视频流切换，可根据网络状况选择不同清晰度 <br>
+26. **播放速度调整**：支持自定义播放速度 <br>
+27. **播放列表管理**：支持创建和管理播放列表 <br>
+28. **第三方播放器**：支持 MPV、IINA 等专业播放器 <br>
 
 ## ⚡ 高速下载
-21. **Aria2c 下载**：集成高速 Aria2c 下载引擎，支持多线程下载 <br>
-22. **远程下载**：可通过远程 Aria2 功能将文件直接下载到远程 VPS/NAS <br>
+29. **Aria2c 下载**：集成高速 Aria2c 下载引擎，支持多线程下载 <br>
+30. **远程下载**：可通过远程 Aria2 功能将文件直接下载到远程 VPS/NAS <br>
 
 ## 📁 文件管理
-23. **文件夹树视图**：提供特有的文件夹树，方便快速操作 <br>
-24. **智能排序**：显示文件夹体积，支持文件夹和文件的混合排序（文件名/体积/时间）<br>
-25. **批量操作**：支持批量重命名大量文件和多层嵌套的文件夹 <br>
-26. **快速预览**：可以快速复制文件，预览视频的雪碧图，并直接删除文件 <br>
-27. **海量文件处理**：能够管理数万文件夹和数万文件，一次性列出文件夹中的全部文件 <br>
-28. **批量传输**：支持一次性上传/下载百万级的文件/文件夹 <br>
+31. **文件夹树视图**：提供特有的文件夹树，方便快速操作 <br>
+32. **智能排序**：显示文件夹体积，支持文件夹和文件的混合排序（文件名/体积/时间）<br>
+33. **批量操作**：支持批量重命名大量文件和多层嵌套的文件夹 <br>
+34. **快速预览**：可以快速复制文件，预览视频的雪碧图，并直接删除文件 <br>
+35. **海量文件处理**：能够管理数万文件夹和数万文件，一次性列出文件夹中的全部文件 <br>
+36. **批量传输**：支持一次性上传/下载百万级的文件/文件夹 <br>
 
 ## 🖥️ 跨平台支持
-29. **全平台兼容**：支持 Windows 7-11、macOS、Linux 等操作系统 <br>
+37. **全平台兼容**：支持 Windows 7-11、macOS、Linux 等操作系统 <br>
+
+<a href="#readme">
+    <img src="https://img.shields.io/badge/-返回顶部-orange.svg" alt="#" align="right">
+</a>
+
+# 专业版 vs 开源版 [![](https://img.shields.io/badge/-Pro%20vs%20Open%20Source-blue)](#专业版-vs-开源版-)
+
+BoxPlayer 保持核心客户端免费开源：文件管理、媒体播放、网盘连接、本地阅读和 clouddrive-cli 自动化能力仍然可以直接使用。专业版主要覆盖需要持续服务端成本的托管 AI 能力、账号订阅和优先支持。
+
+| 能力 | 未登录 | 登录 · 免费版 | 专业版 Pro |
+|---|---|---|---|
+| 多网盘文件管理、上传下载、文件夹树 | — | ✅ | ✅ |
+| 视频 / 音乐播放、本地媒体库、媒体服务器客户端 | ✅ | ✅ | ✅ |
+| 本地书籍阅读、书架、高亮、笔记、书签 | ✅ | ✅ | ✅ |
+| clouddrive-cli / MCP Agent 工具 | ✅ | ✅ | ✅ |
+| BYOK · 自带第三方 API Key 使用 AI | ❌ 需登录 | ✅ 消耗自建 Key 额度 | ✅ 消耗自建 Key 额度 |
+| 内置 BoxPlayer AI 模型 | ❌ | ❌ | ✅ 每月托管 AI credit |
+| AI 智能搜索、语义索引 | ❌ | ❌ | ✅ |
+| AI Agent 网盘搜索 | ❌ 可预览窗口 | ✅ BYOK 可发送 | ✅ 内置 AI / BYOK |
+| PDF / EPUB AI 阅读助手 | ❌ | ❌ | ✅ |
+| 阅读器 AI 即时翻译 | ❌ | ❌ | ✅ |
+| 阅读器 AI 云端高品质朗读 | ❌ | ❌ | ✅ 🚧 即将推出 |
+| 阅读器基础语音朗读 (本地 TTS) | ❌ | ✅ (登录即用) | ✅ |
+| 全网资源搜索 | 5 次/天 | 5 次/天 | ✅ 无限 |
+| TMDB + 豆瓣电影发现 | 基础能力 | 基础能力 | ✅ |
+| 官网工单和优先支持 | 普通支持 | 普通支持 | ✅ 优先处理 |
+
+> **AI 用量说明：** Pro 的托管 AI 功能（AI 搜索、AI 阅读助手、翻译、AI 影视刮削）通过统一 credit 池计量，按月重置。**BYOK（自带 Key）需要登录 BoxPlayer 账号后使用**，不消耗 BoxPlayer credit，但会消耗你自己的第三方 API 额度。**非 Pro 用户**每日可进行 5 次全网资源搜索；Pro 用户不限制。云端高品质朗读即将推出。
 
 <a href="#readme">
     <img src="https://img.shields.io/badge/-返回顶部-orange.svg" alt="#" align="right">
@@ -219,6 +257,17 @@ clouddrive-mcp
 # 新功能 [![](https://img.shields.io/badge/-%E2%9C%A8%20%E6%96%B0%E5%8A%9F%E8%83%BD-orange)](#新功能-)
 
 > 本次版本带来超过 **45 项重磅升级**，覆盖 AI 朗读 / AI 阅读助手 / AI 翻译 / 多模型对话 / 高级音乐播放 / 下载基础设施 / 新增 3 大网盘 / AI 媒体整理代理。下面按模块列出全部新特性。
+
+## 🔥 近期新增：内置 AI、专业版账号与官网工单
+
+1. **内置 BoxPlayer AI（Pro）**：新增 `boxplayer-cloud` 服务商，Pro 用户无需填写 API Key 即可使用内置 DeepSeek / Workers AI 能力；已登录用户仍可配置 OpenAI、DeepSeek、OpenRouter、Ollama、Vercel AI Gateway 等 BYOK 模型。<br>
+2. **统一 AI credit 池**：聊天、AI 搜索、翻译、Embedding、TTS 统一按 credit 计量；内置 BoxPlayer AI 仅 Pro 可用，未登录用户不能使用 BYOK，已登录非 Pro 用户可使用自己的 BYOK 模型；非 Pro 用户每天可进行 5 次全网资源搜索，Pro 用户拥有无限搜索和月度托管 AI 用量。<br>
+3. **阅读器全文双语翻译**：EPUB / PDF 阅读器支持整页翻译，原文和译文双行显示，也可隐藏原文只看译文；翻译结果按段落渐进显示并带缓存，翻页后无需重复等待。<br>
+4. **阅读器布局修复**：单页 / 双页 / 滚动模式重新校准，修复单页多栏、页面宽度只占半屏、滚动模式仍翻页、双页分页异常等问题。<br>
+5. **AI 全局搜索升级**：全局搜索接入内置 AI Agent / OpenAI-compatible 工具调用，支持语义搜索、结果卡片、影片信息和云盘资源联动。<br>
+6. **专业版账号与支付链路**：官网完成月付 / 年付 / 终身版价格页，App 内登录后可跳转官网 Creem 托管支付，支付成功后回到 App 并轮询确认 Pro 状态。<br>
+7. **官网工单系统**：官网新增 `/support/` 工单页，用户可匿名或登录提交 Bug / Feature 需求；登录用户自动关联账号，便于后续跟踪。<br>
+8. **AI 设置页重构**：API 设置页支持多服务商配置缓存、模型列表刷新、内置 AI Pro 标识、Embedding 模型和 SQLite 混合检索参数。<br>
 
 ## 📚 全新「图书库」— AI 加持的个人电子书阅读器
 
@@ -236,7 +285,7 @@ clouddrive-mcp
 12. **OPDS 在线书库订阅**：兼容 OPDS 协议的开放书库即添即用 <br>
 13. **PDF 全文检索 + 章节跳转 + 词典查询 + 文献检索** <br>
 
-## 🎵 音乐高级播放（lx-music-desktop 移植，零版权风险）
+## 🎵 音乐高级播放
 
 14. **AudioContext 音效引擎**：10 段 EQ + 混响 + 声像 + 变调不变速 + 实时频谱可视化 <br>
 15. **逐字卡拉 OK 歌词**：基于 Web Animation API 的逐字高亮动画，支持翻译 / 罗马音双行 <br>
@@ -286,40 +335,50 @@ clouddrive-mcp
 
 # 界面 [![](https://img.shields.io/badge/-%E7%95%8C%E9%9D%A2-blue)](#界面-)
 
-## 🖥️ 媒体服务器管理
-<img src="screenshot/截屏2026-04-24 23.03.06.png" width="380"> <img src="screenshot/截屏2026-04-24 23.04.22.png" width="380">
+## 🤖 AI 智能搜索与 Agent
+<img src="screenshot/search_global.png" width="380"> <img src="screenshot/ai_agent.png" width="380">
 
-*媒体服务器列表 & 服务器卡片视图（支持自定义图标）*
+*全局资源搜索、AI Agent 语义搜索和云盘结果联动。*
 
-## 🏠 媒体服务器主页
-<img src="screenshot/截屏2026-04-24 23.06.07.png" width="380"> <img src="screenshot/截屏2026-04-24 23.18.46.png" width="380">
+## 🎬 视频媒体库
+<img src="screenshot/drive_library.png" width="380"> <img src="screenshot/mediaserver_home.png" width="380">
 
-*继续观看 & 分类媒体库（图库视图）*
+*扫描网盘、本地文件夹与 WebDAV 媒体源，自动识别电影、剧集、纪录片和动画，刮削 TMDB 元数据并生成海报墙。支持最近添加、继续观看、分类、评分、年份、播放列表、媒体服务器和云盘媒体库统一搜索。*
 
-## 🎬 剧集与媒体详情
-<img src="screenshot/截屏2026-04-24 23.06.22.png" width="380"> <img src="screenshot/截屏2026-04-24 23.28.52.png" width="380">
+## 📚 书籍库与 AI 阅读器
+<img src="screenshot/book_home.png" width="380"> <img src="screenshot/book_reader.png" width="380">
 
-*剧集详情页 & 剧集列表*
+*从网盘和本地文件夹扫描 EPUB、PDF、MOBI、AZW3、TXT 等电子书格式，自动整理书架、封面、阅读进度、笔记、书签和高亮。阅读器支持 AI 对话、TTS、全文双语翻译、隐藏原文和翻译缓存。*
 
-## 📺 动漫与分类浏览
-<img src="screenshot/截屏2026-04-24 23.19.14.png" width="380"> <img src="screenshot/截屏2026-04-24 23.19.41.png" width="380">
+## 🎵 音乐库与粒子播放器
+<img src="screenshot/music_library.png" width="380"> <img src="screenshot/music_player.png" width="380">
 
-*动漫库 & 媒体服务器搜索*
+*扫描网盘和本地音乐，按歌曲、艺人、专辑、文件夹和本地歌单组织资料库。播放器支持实时频谱可视化、粒子动画背景、10 段 EQ、混响、声像、变调不变速、逐字卡拉 OK 歌词、桌面浮动歌词、多源歌词 / 封面补全和主题编辑器。*
 
-## 🔍 媒体库与聚合搜索
-<img src="screenshot/截屏2026-04-24 23.19.53.png" width="380"> <img src="screenshot/截屏2026-04-24 23.20.36.png" width="380">
+## 🧾 官网工单与支持
+<img src="screenshot/support-ticket.png" width="380">
 
-*聚合搜索 & 本地媒体库列表视图*
+*匿名或登录提交 Bug / Feature，登录用户自动关联账号。*
 
-## 📂 文件管理界面
-<img src="screenshot/截屏2026-04-24 23.20.18.png" width="380"> <img src="images/folder-tree.png" width="380">
+## 🖥️ 媒体服务器
+<img src="screenshot/mediaserver_home.png" width="380"> <img src="screenshot/mediaserver_library.png" width="380">
 
-*文件管理主界面 & 文件夹树视图*
+*媒体服务器首页继续观看 & 分类媒体库浏览。*
 
-## 👤 多账号登录
-<img src="images/multi-account.png" width="380"> <img src="images/login-qr.png" width="380">
+## 🎬 剧集详情
+<img src="screenshot/mediaserver_detail.png" width="380"> <img src="screenshot/mediaserver_collection.png" width="380">
 
-*多网盘账号管理 & 二维码登录*
+*剧集详情页 & 合集视图。*
+
+## 🔍 搜索与聚合
+<img src="screenshot/mediaserver_search.png" width="380"> <img src="screenshot/drive_library_global_search.png" width="380">
+
+*媒体服务器搜索 & 聚合搜索。*
+
+## 📂 媒体库与网盘
+<img src="screenshot/drive_library.png" width="380"> <img src="screenshot/drive_home.png" width="380">
+
+*本地媒体库列表视图 & 网盘文件管理主界面。*
 
 <a href="#readme">
 <img src="https://img.shields.io/badge/-返回顶部-orange.svg" alt="#" align="right">
@@ -427,6 +486,8 @@ sudo xattr -d com.apple.quarantine /Applications/xbyboxplayer.app
 本项目基于 https://github.com/liupan1890/aliyunpan 仓库继续开发。
 
 感谢作者 [liupan1890](https://github.com/liupan1890)
+
+全网搜索功能来自 [panhub.shenzjd.com](https://github.com/wu529778790/panhub.shenzjd.com)
 <a href="#readme">
 <img src="https://img.shields.io/badge/-返回顶部-orange.svg" alt="#" align="right">
 </a>

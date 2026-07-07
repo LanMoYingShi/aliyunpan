@@ -38,7 +38,7 @@
   </a>
 </p>
 
-[![](https://img.shields.io/badge/-Features-blue)](#features-) [![](https://img.shields.io/badge/-%E2%9C%A8%20New%20Features-orange)](#new-features-) [![](https://img.shields.io/badge/-Screenshots-blue)](#screenshots-) [![](https://img.shields.io/badge/-Installation-blue)](#installation-) [![](https://img.shields.io/badge/-CLI-blue)](#clouddrive-cli-) [![](https://img.shields.io/badge/-WeChat-blue)](#wechat-official-account-) [![](https://img.shields.io/badge/-Community-blue)](#community-) [![](https://img.shields.io/badge/-Credits-blue)](#credits-) [![](https://img.shields.io/badge/-Disclaimer-blue)](#disclaimer-)
+[![](https://img.shields.io/badge/-Features-blue)](#features-) [![](https://img.shields.io/badge/-Pro%20vs%20Open%20Source-blue)](#pro-vs-open-source-) [![](https://img.shields.io/badge/-%E2%9C%A8%20New%20Features-orange)](#new-features-) [![](https://img.shields.io/badge/-Screenshots-blue)](#screenshots-) [![](https://img.shields.io/badge/-Installation-blue)](#installation-) [![](https://img.shields.io/badge/-CLI-blue)](#clouddrive-cli-) [![](https://img.shields.io/badge/-WeChat-blue)](#wechat-official-account-) [![](https://img.shields.io/badge/-Community-blue)](#community-) [![](https://img.shields.io/badge/-Credits-blue)](#credits-) [![](https://img.shields.io/badge/-Disclaimer-blue)](#disclaimer-)
 
 # Features [![](https://img.shields.io/badge/-Features-blue)](#features-)
 
@@ -89,9 +89,48 @@
     <img src="https://img.shields.io/badge/-Back%20to%20top-orange.svg" alt="#" align="right">
 </a>
 
+# Pro vs Open Source [![](https://img.shields.io/badge/-Pro%20vs%20Open%20Source-blue)](#pro-vs-open-source-)
+
+BoxPlayer keeps the core client free and open source: file management, media playback, cloud-drive connections, local reading, and clouddrive-cli automation remain available. Pro mainly covers hosted AI features and account services that create recurring server costs.
+
+| Capability | Not signed in | Signed in · Free | Pro |
+|---|---|---|---|
+| Multi-cloud file management, upload, download, folder tree | — | ✅ | ✅ |
+| Video / music playback, local media library, media server clients | ✅ | ✅ | ✅ |
+| Local book reading, bookshelf, highlights, notes, bookmarks | ✅ | ✅ | ✅ |
+| clouddrive-cli / MCP Agent tools | ✅ | ✅ | ✅ |
+| BYOK · Use your own third-party API key for AI | ✅ Your own quota | ✅ Your own quota | ✅ Your own quota |
+| Built-in BoxPlayer AI models | ❌ | ❌ | ✅ Monthly hosted AI credits |
+| AI Smart Search, semantic indexing | ❌ | ❌ | ✅ |
+| AI Agent cloud-drive search | ❌ | ❌ | ✅ |
+| PDF / EPUB AI reading companion | ❌ | ❌ | ✅ |
+| Reader AI instant translation | ❌ | ❌ | ✅ |
+| Reader AI cloud text-to-speech | ❌ | ❌ | ✅ 🚧 Coming soon |
+| Reader basic text-to-speech (Local TTS) | ❌ | ✅ (sign-in required) | ✅ |
+| One-click public share save | ❌ | 5/day | ✅ Unlimited |
+| TMDB + Douban movie discovery | Basic | Basic | ✅ |
+| Website support tickets and priority handling | Standard | Standard | ✅ Priority support |
+
+> **AI credit notes:** Pro hosted AI features (AI Search, AI Reading Companion, Translation, AI Media Scraping) draw from a unified credit pool that resets monthly. **BYOK (bring your own key) is completely free** for everyone — uses your own third-party API quota, no BoxPlayer credits consumed, works even without signing in. **Signed-in free users** also get local TTS and 5 public share saves per day. Cloud TTS is coming soon.
+
+<a href="#readme">
+    <img src="https://img.shields.io/badge/-Back%20to%20top-orange.svg" alt="#" align="right">
+</a>
+
 # New Features [![](https://img.shields.io/badge/-%E2%9C%A8%20New%20Features-orange)](#new-features-)
 
 > This release ships **45+ major upgrades**, covering AI Read-Aloud / AI Reading Assistant / AI Translation / multi-model chat / advanced music playback / Download infrastructure / 3 new cloud drives / AI media organizer agent. Every new capability is grouped by module below.
+
+## Recent additions: built-in AI, Pro account, and support tickets
+
+1. **Built-in BoxPlayer AI (Pro)**: new `boxplayer-cloud` provider lets Pro users use hosted DeepSeek / Workers AI without entering an API key, while OpenAI, DeepSeek, OpenRouter, Ollama, Vercel AI Gateway, and custom BYOK providers remain available.<br>
+2. **Unified AI credit pool**: chat, AI search, translation, embeddings, and TTS share one internal credit system. Anonymous users cannot call hosted AI; signed-in trial users receive a small daily pool; Pro users receive a monthly hosted AI allowance.<br>
+3. **Full-page bilingual reader translation**: EPUB / PDF reading can show original text and translation line by line, or hide the original text for translated-only reading. Translation renders progressively by paragraph and is cached across page turns.<br>
+4. **Reader layout fixes**: single-page, double-page, and scroll modes were recalibrated to fix multi-column text, half-width pages, scroll mode pagination, and double-page pagination bugs.<br>
+5. **AI Global Search upgrade**: global search now connects to built-in AI Agent / OpenAI-compatible tool calling, semantic search, movie cards, and cloud-drive resource results.<br>
+6. **Pro account and payment flow**: the website now has monthly / yearly / lifetime pricing, hosted Creem checkout, app callback handling, and post-payment polling to confirm Pro status inside the app.<br>
+7. **Website support ticket system**: `/support/` accepts anonymous or signed-in Bug / Feature tickets. Signed-in tickets are linked to the user account for follow-up.<br>
+8. **AI settings redesign**: provider config caching, model refresh, built-in AI Pro labeling, embedding model settings, and SQLite hybrid retrieval options are now managed in one API settings page.<br>
 
 ## Brand-new “Library” — AI-powered personal e-book reader
 
@@ -109,7 +148,7 @@
 12. **OPDS subscriptions**: subscribe to any OPDS-compliant online library. <br>
 13. **PDF full-text search + chapter navigation + dictionary lookup + reference search**. <br>
 
-## Advanced Music Playback (lx-music-desktop port, no copyright risk)
+## Advanced Music Playback
 
 14. **AudioContext audio engine**: 10-band EQ + reverb + panning + pitch shift (without speed change) + real-time spectrum visualization. <br>
 15. **Word-by-word karaoke lyrics**: per-character highlight animations powered by Web Animations API, with translation / romaji dual-line support. <br>
@@ -167,38 +206,50 @@
 
 # Screenshots [![](https://img.shields.io/badge/-Screenshots-blue)](#screenshots-)
 
-## Media Server Management
-<img src="screenshot/截屏2026-04-24 23.03.06.png" width="380"> <img src="screenshot/截屏2026-04-24 23.04.22.png" width="380">
+## AI Smart Search and Agent
+<img src="screenshot/search_global.png" width="380"> <img src="screenshot/ai_agent.png" width="380">
 
-*Media server list and server card view, with custom icon support.*
+*Global resource search, AI Agent semantic search, and cloud-drive result cards.*
 
-## Media Server Home
-<img src="screenshot/截屏2026-04-24 23.06.07.png" width="380"> <img src="screenshot/截屏2026-04-24 23.18.46.png" width="380">
+## AI Reader
+<img src="screenshot/book_reader.png" width="380"> <img src="screenshot/book_reader_ai.png" width="380">
 
-*Continue Watching and categorized media library gallery view.*
+*Reader AI chat, TTS, full-page bilingual translation, translated-only view, and cached translations.*
 
-## Episodes and Media Details
-<img src="screenshot/截屏2026-04-24 23.06.22.png" width="380"> <img src="screenshot/截屏2026-04-24 23.28.52.png" width="380">
+## Particle Music Player
+<img src="screenshot/music_player.png" width="380">
 
-*Episode detail page and episode list.*
+*Real-time spectrum visualization with particle animation background, 10-band EQ, reverb, pan, pitch-shift, word-level karaoke lyrics, and desktop floating lyric window.*
 
-## Anime and Category Browsing
-<img src="screenshot/截屏2026-04-24 23.19.14.png" width="380"> <img src="screenshot/截屏2026-04-24 23.19.41.png" width="380">
+## Music Library
+<img src="screenshot/music_library.png" width="380"> <img src="screenshot/search_local.png" width="380">
 
-*Anime library and media server search.*
+*Music library, lyric enhancements, local media library, and local search.*
 
-## Media Library and Aggregated Search
-<img src="screenshot/截屏2026-04-24 23.19.53.png" width="380"> <img src="screenshot/截屏2026-04-24 23.20.36.png" width="380">
+## Website Support Tickets
+<img src="screenshot/support-ticket.png" width="380">
 
-*Aggregated search and local media library list view.*
+*Submit Bug / Feature tickets anonymously or signed in. Signed-in tickets are linked to the user account.*
 
-## File Management
-<img src="screenshot/截屏2026-04-24 23.20.18.png" width="380"> <img src="images/folder-tree.png" width="380">
+## Media Server
+<img src="screenshot/mediaserver_home.png" width="380"> <img src="screenshot/mediaserver_library.png" width="380">
 
-*Main file management view and folder tree.*
+*Media server home with Continue Watching and categorized media library browsing.*
 
-## Multiple Accounts
-<img src="images/multi-account.png" width="380"> <img src="images/login-qr.png" width="380">
+## Episode Details
+<img src="screenshot/mediaserver_detail.png" width="380"> <img src="screenshot/mediaserver_collection.png" width="380">
+
+*Episode detail page and collection view.*
+
+## Search & Aggregation
+<img src="screenshot/mediaserver_search.png" width="380"> <img src="screenshot/drive_library_global_search.png" width="380">
+
+*Media server search and aggregated cross-drive search.*
+
+## Media Library & Drive
+<img src="screenshot/drive_library.png" width="380"> <img src="screenshot/drive_home.png" width="380">
+
+*Local media library list view and cloud-drive file management.*
 
 *Multi-cloud account management and QR code login.*
 
@@ -310,6 +361,8 @@ Full documentation: [clouddrive-cli/README.en.md](./clouddrive-cli/README.en.md)
 This project continues development based on https://github.com/liupan1890/aliyunpan.
 
 Thanks to [liupan1890](https://github.com/liupan1890).
+
+Global search feature from [panhub.shenzjd.com](https://github.com/wu529778790/panhub.shenzjd.com)
 
 <a href="#readme">
 <img src="https://img.shields.io/badge/-Back%20to%20top-orange.svg" alt="#" align="right">
