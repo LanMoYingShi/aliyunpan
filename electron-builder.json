@@ -27,6 +27,7 @@
     "artifactName": "boxplayer-${version}-mac-${arch}.${ext}",
     "darkModeSupport": true,
     "hardenedRuntime": true,
+    "identity": "-",
     "gatekeeperAssess": false,
     "category": "public.app-category.utilities",
     "entitlements": "./build/entitlements.mac.plist",
