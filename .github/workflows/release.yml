@@ -153,8 +153,11 @@ jobs:
           SUBTITLE_DOWNLOAD_API_KEY: ${{ secrets.SUBTITLE_DOWNLOAD_API_KEY }}
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           BOXPLAYER_AI_API_URL: ${{ secrets.BOXPLAYER_AI_API_URL }}
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           SKIP_VERSION_BUMP: true
           NODE_OPTIONS: --max-old-space-size=6144
